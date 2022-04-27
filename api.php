@@ -37,12 +37,17 @@ else if($method == 'POST') //veri eklemek için
     $gelenJson = file_get_contents('php://input',true); //json verisi gelecekse bu şekilde veriyi alabiliriz.
     $gelenJsonVerisi = json_decode($gelenJson); //gelen json verisini decode işlemine sokalım.
     
-    $marka = $gelenJsonVerisi->{'marka'};
-    $model = $gelenJsonVerisi->{'model'};
-    $islemci = $gelenJsonVerisi->{'islemci'};
-    $ram = $gelenJsonVerisi->{'ram'};
-    $ekranKarti = $gelenJsonVerisi->{'ekranKarti'};
-    $isletimSistemi = $gelenJsonVerisi->{'isletimSistemi'};
+    /*
+    json_decode fonksiyonuna true parametresini eklemezsek gelen json verileri birer nesne olarak return edilir.
+    eğer true eklersek bu kez de veriler associative array şeklinde return edilir.
+    aşağıdaki kullanımın sebebi true parametresini eklemediğimiz için.
+    */
+    $marka = $gelenJsonVerisi->marka;
+    $model = $gelenJsonVerisi->model;
+    $islemci = $gelenJsonVerisi->islemci;
+    $ram = $gelenJsonVerisi->ram;
+    $ekranKarti = $gelenJsonVerisi->ekranKarti;
+    $isletimSistemi = $gelenJsonVerisi->isletimSistemi;
 
     $baglanti = baglan();
     $sorgu = $baglanti->prepare("INSERT INTO bilgisayarlar(marka,model,islemci,ram,ekranKarti,isletimSistemi) VALUES(:marka,:model,:islemci,:ram,:ekranKarti,:isletimSistemi)");
@@ -56,7 +61,7 @@ else if($method == 'POST') //veri eklemek için
 
     if($sorgu->rowCount()>0)
     {
-        http_response_code(204); //204 kodu alıyorsan işlem başarıyla gerçekleşti demektir. eklenen-silinen veriler geri döndürülmez.
+        http_response_code(204); //204 kodu alıyorsan işlem başarıyla gerçekleşti demektir.
     }
     else
     {
@@ -64,9 +69,12 @@ else if($method == 'POST') //veri eklemek için
     }
 
 }
-else if($method == 'PUT')
+else if($method == 'PUT') //veri güncellemek için
 {
+    $gelenJson = file_get_contents('php://input',true);
+    $gelenJsonVerisi = json_decode($gelenJson);
 
+    $id = $gelenJsonVerisi->id;
 }
 else if($metgod == 'DELETE')
 {
