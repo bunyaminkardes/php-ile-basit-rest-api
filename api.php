@@ -75,6 +75,32 @@ else if($method == 'PUT') //veri güncellemek için
     $gelenJsonVerisi = json_decode($gelenJson);
 
     $id = $gelenJsonVerisi->id;
+    $marka = $gelenJsonVerisi->marka;
+    $model = $gelenJsonVerisi->model;
+    $islemci = $gelenJsonVerisi->islemci;
+    $ram = $gelenJsonVerisi->ram;
+    $ekranKarti = $gelenJsonVerisi->ekranKarti;
+    $isletimSistemi = $gelenJsonVerisi->isletimSistemi;
+
+    $baglanti = baglan();
+    $sorgu = $baglanti->prepare("UPDATE bilgisayarlar SET marka=:marka, model=:model, islemci=:islemci, ram=:ram, ekranKarti=:ekranKarti, isletimSistemi=:isletimSistemi WHERE id=:id");
+    $sorgu->bindParam(":id",$id);
+    $sorgu->bindParam(":marka",$marka);
+    $sorgu->bindParam(":model",$model);
+    $sorgu->bindParam(":islemci",$islemci);
+    $sorgu->bindParam(":ram",$ram);
+    $sorgu->bindParam(":ekranKarti",$ekranKarti);
+    $sorgu->bindParam(":isletimSistemi",$isletimSistemi);
+    $sorgu->execute();
+
+    if($sorgu->rowCount()>0)
+    {
+        http_response_code(204);
+    }
+    else
+    {
+        http_response_code(400);
+    }
 }
 else if($metgod == 'DELETE')
 {
