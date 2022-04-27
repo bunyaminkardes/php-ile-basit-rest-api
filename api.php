@@ -102,9 +102,26 @@ else if($method == 'PUT') //veri güncellemek için
         http_response_code(400);
     }
 }
-else if($metgod == 'DELETE')
+else if($method == 'DELETE') //veri silmek için
 {
+    $gelenJson = file_get_contents('php://input',true);
+    $gelenJsonVerisi = json_decode($gelenJson);
 
+    $id = $gelenJsonVerisi->id;
+
+    $baglanti = baglan();
+    $sorgu = $baglanti->prepare("DELETE FROM bilgisayarlar WHERE id=:id");
+    $sorgu->bindParam(":id",$id);
+    $sorgu->execute();
+    
+    if($sorgu->rowCount()>0)
+    {
+        http_response_code(204);
+    }
+    else
+    {
+        http_response_code(400);
+    }
 }
 
 
